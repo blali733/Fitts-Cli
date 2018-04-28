@@ -18,7 +18,7 @@ public class ConfigLoader : MonoBehaviour {
         string config = LoadFile();
         ConfigContent configuration = new ConfigContent();
         configuration = JsonUtility.FromJson<ConfigContent>(config);
-        ConfigSingleton configInstance = ConfigSingleton.getInstance();
+        ConfigSingleton configInstance = ConfigSingleton.GetInstance();
         configInstance.setNetworkConfig(new NetworkConfig(configuration.serverIP, configuration.serverPort));
 	}
 

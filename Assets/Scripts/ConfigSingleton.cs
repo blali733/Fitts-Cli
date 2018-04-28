@@ -21,7 +21,7 @@ public class ConfigSingleton : MonoBehaviour {
     private NetworkConfig networkConfig = new NetworkConfig();
 
     //Instance getter
-    public static ConfigSingleton getInstance()
+    public static ConfigSingleton GetInstance()
     {
         if (instance == null)
             instance = new ConfigSingleton();
