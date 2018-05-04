@@ -19,7 +19,7 @@ public class ConfigLoader : MonoBehaviour {
         ConfigContent configuration = new ConfigContent();
         configuration = JsonUtility.FromJson<ConfigContent>(config);
         ConfigSingleton configInstance = ConfigSingleton.GetInstance();
-        configInstance.setNetworkConfig(new NetworkConfig(configuration.serverIP, configuration.serverPort));
+        configInstance.setMyNetworkConfig(new MyNetworkConfig(configuration.serverIP, configuration.serverPort));
 	}
 
     string LoadFile()

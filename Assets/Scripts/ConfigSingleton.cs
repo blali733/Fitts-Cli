@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public struct NetworkConfig
+public struct MyNetworkConfig
 {
     public string address;
     public string port;
-    public NetworkConfig(string address, string port)
+    public MyNetworkConfig(string address, string port)
     {
         this.address = address;
         this.port = port;
@@ -18,7 +18,7 @@ public class ConfigSingleton : MonoBehaviour {
     private static ConfigSingleton instance;
 
     //Variables:
-    private NetworkConfig networkConfig = new NetworkConfig();
+    private MyNetworkConfig _myNetworkConfig = new MyNetworkConfig();
 
     //Instance getter
     public static ConfigSingleton GetInstance()
@@ -28,13 +28,13 @@ public class ConfigSingleton : MonoBehaviour {
         return instance;
     }
 
-    public NetworkConfig getNetworkConfig()
+    public MyNetworkConfig getMyNetworkConfig()
     {
-        return this.networkConfig;
+        return this._myNetworkConfig;
     }
 
-    public void setNetworkConfig(NetworkConfig networkConfig)
+    public void setMyNetworkConfig(MyNetworkConfig myNetworkConfig)
     {
-        this.networkConfig = networkConfig;
+        this._myNetworkConfig = myNetworkConfig;
     }
 }
