@@ -15,7 +15,25 @@ public struct MyNetworkConfig
 
 public class ConfigSingleton : MonoBehaviour {
     //Singleton instance
-    private static ConfigSingleton instance;
+    private static ConfigSingleton _instance;
+    private readonly float _boardHeight;
+    private readonly float _boardWidth;
+
+    public float BoardWidth
+    {
+        get { return _boardWidth; }
+    }
+
+    public float BoardHeight
+    {
+        get { return _boardHeight; }
+    }
+
+    private ConfigSingleton()
+    {
+        _boardHeight = Camera.main.GetComponent<Camera>().orthographicSize;
+        _boardWidth = _boardHeight * Screen.width / Screen.height;
+    }
 
     //Variables:
     private MyNetworkConfig _myNetworkConfig = new MyNetworkConfig();
@@ -23,17 +41,17 @@ public class ConfigSingleton : MonoBehaviour {
     //Instance getter
     public static ConfigSingleton GetInstance()
     {
-        if (instance == null)
-            instance = new ConfigSingleton();
-        return instance;
+        if (_instance == null)
+            _instance = new ConfigSingleton();
+        return _instance;
     }
 
-    public MyNetworkConfig getMyNetworkConfig()
+    public MyNetworkConfig GetMyNetworkConfig()
     {
         return this._myNetworkConfig;
     }
 
-    public void setMyNetworkConfig(MyNetworkConfig myNetworkConfig)
+    public void SetMyNetworkConfig(MyNetworkConfig myNetworkConfig)
     {
         this._myNetworkConfig = myNetworkConfig;
     }

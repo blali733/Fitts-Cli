@@ -26,24 +26,19 @@ public class TargetController : MonoBehaviour {
     public void Construct(double scale, Vector2 position, Color color)
     {
         item.transform.localScale = new Vector3((float)scale, (float)scale, (float)scale);
-        item.transform.position = new Vector3(position[0], position[1], 0);
+        item.transform.position = new Vector3(position[0], position[1], -1);
         SetColor(color);
-    }
-
-    private void SetVisible(bool desiredState)
-    {
-        item.SetActive(desiredState);
     }
 
     private void SetColor(Color color)
     {
-        SpriteRenderer renderer = center.GetComponent<SpriteRenderer>();
-        renderer.color = color;
-
+        SpriteRenderer myRenderer = center.GetComponent<SpriteRenderer>();
+        myRenderer.color = color;
     }
 
-    // Update is called once per frame
-    private void Update () {
-		
-	}
+    private void OnMouseDown()
+    {
+        Debug.Log("clicked");
+        Destroy(item, 0);
+    }
 }
