@@ -53,6 +53,7 @@ public class ConfigSingleton : MonoBehaviour {
 
     private ConfigSingleton()
     {
+        Camera.main.GetComponent<Camera>().orthographicSize = (float)Screen.height / 100;
         _boardHeight = Camera.main.GetComponent<Camera>().orthographicSize*2;
         _pointsPerUnit = 100;
         _boardHeightPoints = (int) ((_boardHeight - 2) * _pointsPerUnit);
