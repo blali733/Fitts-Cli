@@ -14,21 +14,20 @@ public class ConfigContent
 public class ConfigLoader : MonoBehaviour {
 
 	// Use this for initialization
-	void Start () {
+	private void Start () {
         string config = LoadFile();
-        ConfigContent configuration = new ConfigContent();
-        configuration = JsonUtility.FromJson<ConfigContent>(config);
+	    ConfigContent configuration = JsonUtility.FromJson<ConfigContent>(config);
         ConfigSingleton configInstance = ConfigSingleton.GetInstance();
         configInstance.SetMyNetworkConfig(new MyNetworkConfig(configuration.serverIP, configuration.serverPort));
 	}
 
-    string LoadFile()
+    private string LoadFile()
     {
         return File.ReadAllText("./config.json");
     }
-	
-	// Update is called once per frame
-	void Update () {
+
+    // Update is called once per frame
+    private void Update () {
 		
 	}
 }

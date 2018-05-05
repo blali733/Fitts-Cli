@@ -5,18 +5,21 @@ using UnityEngine;
 public class TargetSpawner : MonoBehaviour
 {
     public GameObject targetPrefab;
+    private ConfigSingleton config;
 
 	// Use this for initialization
 	void Start ()
 	{
+        config = ConfigSingleton.GetInstance();
 	    GameObject target = Instantiate(targetPrefab);
-        target.GetComponent<TargetController>().Construct(1.0, new Vector2(0,0));
-	    GameObject target2 = Instantiate(targetPrefab);
-	    target2.GetComponent<TargetController>().Construct(0.5, new Vector2(5, -4), Color.green);
+	    target.transform.parent = this.transform;
+        target.GetComponent<TargetController>().Construct(config.GetRandomSize(), config.GetRandomPosition());
     }
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+
+    public void Respawn()
+    {
+        GameObject target = Instantiate(targetPrefab);
+        target.transform.parent = this.transform;
+        target.GetComponent<TargetController>().Construct(config.GetRandomSize(), config.GetRandomPosition());
+    }
 }
