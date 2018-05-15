@@ -4,17 +4,17 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class TargetController : MonoBehaviour {
-    GameObject item;
-    GameObject center;
-    GameObject frame;
-    ConfigSingleton settings;
+    private GameObject item;
+    GameObject _center;
+    GameObject _frame;
+    ConfigSingleton _settings;
 
     // Use this for initialization
     private void Awake () {
-        settings = ConfigSingleton.GetInstance();
+        _settings = ConfigSingleton.GetInstance();
         item = this.gameObject;
-        center = this.gameObject.transform.Find("Center").gameObject;
-        frame = this.gameObject.transform.Find("Frame").gameObject;
+        _center = this.gameObject.transform.Find("Center").gameObject;
+        _frame = this.gameObject.transform.Find("Frame").gameObject;
 	}
 
     public void Construct(double scale, Vector2 position)
@@ -32,7 +32,7 @@ public class TargetController : MonoBehaviour {
 
     private void SetColor(Color color)
     {
-        SpriteRenderer myRenderer = center.GetComponent<SpriteRenderer>();
+        SpriteRenderer myRenderer = _center.GetComponent<SpriteRenderer>();
         myRenderer.color = color;
     }
 
