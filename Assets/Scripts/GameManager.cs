@@ -24,8 +24,12 @@ public class GameManager : MonoBehaviour
         _config = ConfigSingleton.GetInstance();
 	    _targetDatas = new List<TargetData>();
 	    _testCases = _config.GetTestCases();
-        transform.GetChild(0).GetComponent<TargetSpawner>().Setup(_testCases[0]);
 	}
+
+    public void MessageClosed()
+    {
+        transform.GetChild(0).GetComponent<TargetSpawner>().Setup(_testCases[0]);
+    }
 
     public void TargetAcquired(TargetData targetData)
     {

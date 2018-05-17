@@ -9,5 +9,6 @@ public class ButtonBehaviour : MonoBehaviour
     public void TestAnnouncer()
     {
         Destroy(Canvas.transform.Find("TestAnnouncer(Clone)").gameObject);
+        BroadcastMessage("MessageClosed");
     }
 }
