@@ -6,13 +6,9 @@ public class MainLoop : MonoBehaviour
 {
     public GameObject ExperimentController;
 
-	// Use this for initialization
 	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
+		// Temporary solution
+	    GameObject experiment = Instantiate(ExperimentController);
+	    experiment.transform.parent = this.transform;
 	}
 }
