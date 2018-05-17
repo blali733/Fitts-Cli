@@ -8,7 +8,7 @@ using SharedTypes;
 
 
 
-public class ConfigSingleton : MonoBehaviour {
+public class ConfigSingleton{
     //Singleton instance
     private static ConfigSingleton _instance;
 
@@ -54,7 +54,7 @@ public class ConfigSingleton : MonoBehaviour {
                 float minX = prevX - radius;
                 float maxX = prevX + radius;
                 float y1, y2;
-                foreach (var x in Helpers.FloatRange(minX<(-_boardWidthRange)?minX:(-_boardWidthRange), maxX < (-_boardWidthRange) ? maxX : (-_boardWidthRange),1/_pointsPerUnit))
+                foreach (var x in Helpers.FloatRange(minX>(-_boardWidthRange)?minX:(-_boardWidthRange), maxX < (_boardWidthRange) ? maxX : (_boardWidthRange),1/_pointsPerUnit))
                 {
                     var variableDeltaComponent = 2 * prevX * x - x * x;
                     y1 = prevY + (float) Math.Sqrt(constDeltaCompontent + variableDeltaComponent);
@@ -137,6 +137,8 @@ public class ConfigSingleton : MonoBehaviour {
         _rng = new System.Random();
         IsSystemReady = false;
         _testCaseList = new List<TestCase>();
+        TestCase testCase = new TestCase(20, ColorMode.StaticGreen, DisplayMode.ConstantUnitSize, 75, 125, DistanceMode.EqualDistance, 5);
+        _testCaseList.Add(testCase);
     }
 
     //Instance getter

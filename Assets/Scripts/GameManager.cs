@@ -5,18 +5,23 @@ using SharedTypes;
 
 public class GameManager : MonoBehaviour
 {
-    public List<TargetData> TargetDatas;
-    public List<TestCase> TestCases;
+    private List<TargetData> _targetDatas;
+    private List<TestCase> _testCases;
+    private ConfigSingleton _config;
 
 	// Use this for initialization
-	void Start () {
-	    TargetDatas = new List<TargetData>();	
+	void Start ()
+	{
+        _config = ConfigSingleton.GetInstance();
+	    _targetDatas = new List<TargetData>();
+	    _testCases = _config.GetTestCases();
+        transform.GetChild(0).GetComponent<TargetSpawner>().Setup(_testCases[0]);
 	}
 
     public void TargetAcquired(TargetData targetData)
     {
         // Implement recalculation of positions
-        TargetDatas.Add(targetData);
+        _targetDatas.Add(targetData);
     }
 
     public void TestCompleted()

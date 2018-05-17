@@ -15,7 +15,7 @@ public class TargetSpawner : MonoBehaviour
     private TargetData _targetData;
 
 	// Use this for initialization
-	private void Start ()
+	private void Awake ()
 	{
 	    _config = ConfigSingleton.GetInstance();
 	}
