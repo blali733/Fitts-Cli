@@ -39,7 +39,7 @@ public class TargetController : MonoBehaviour {
     private void OnMouseDown()
     {
         Debug.Log("clicked");
-        SendMessageUpwards("Respawn");
+        SendMessageUpwards("Respawn", DateTime.Now);
         Destroy(item, 0);
     }
 }
