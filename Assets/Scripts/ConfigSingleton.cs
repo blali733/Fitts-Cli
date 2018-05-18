@@ -12,28 +12,44 @@ public class ConfigSingleton{
     //Singleton instance
     private static ConfigSingleton _instance;
 
-    //Variables:
+    #region Variables
     private MyNetworkConfig _myNetworkConfig;
     private int _boardHeightPoints;
     private int _boardWidthPoints;
     private float _boardHeightRange;
     private float _boardWidthRange;
-    private float _pointsPerUnit;
+    private readonly float _pointsPerUnit;
+    private float _pixelsPerUnit;
+    private Vector2 _centerPixelPosition;
     private int _maxRange;
     private readonly System.Random _rng;
     private List<TestCase> _testCaseList;
-
+    
     public float BoardWidth { get; private set; }
 
     public float BoardHeight { get; private set; }
 
     public bool IsSystemReady { get; private set; }
+    #endregion
 
+    #region Getters and setters
     public List<TestCase> GetTestCases()
     {
         return _testCaseList;
     }
 
+    public MyNetworkConfig GetMyNetworkConfig()
+    {
+        return this._myNetworkConfig;
+    }
+
+    public void SetMyNetworkConfig(MyNetworkConfig myNetworkConfig)
+    {
+        this._myNetworkConfig = myNetworkConfig;
+    }
+    #endregion
+
+    #region Generators
     public Vector2 GetRandomPosition(DistanceMode mode, float radius, TargetData targetData)
     {
         switch (mode)
@@ -95,7 +111,9 @@ public class ConfigSingleton{
                 return Color.black;
         }
     }
+    #endregion
 
+    #region Camera related
     public void SetCameraProperties(DisplayMode mode)
     {
         switch (mode)
@@ -103,9 +121,9 @@ public class ConfigSingleton{
             case DisplayMode.ConstantPixelSize:
             {
                 Camera.main.GetComponent<Camera>().orthographicSize = (float)Screen.height / 100;
+                _pixelsPerUnit = 100;
                 _boardHeightRange = Camera.main.GetComponent<Camera>().orthographicSize;
                 BoardHeight = _boardHeightRange * 2;
-                _pointsPerUnit = 100;
                 _boardHeightPoints = (int)((BoardHeight - 2) * _pointsPerUnit);
                 _boardWidthRange = _boardHeightRange * Screen.width / Screen.height - 1;
                 _boardHeightRange--;
@@ -117,9 +135,9 @@ public class ConfigSingleton{
             case DisplayMode.ConstantUnitSize:
             {
                 Camera.main.GetComponent<Camera>().orthographicSize = 10;
+                _pixelsPerUnit = (float) Screen.height / 10;
                 _boardHeightRange = Camera.main.GetComponent<Camera>().orthographicSize;
                 BoardHeight = _boardHeightRange * 2;
-                _pointsPerUnit = 100;
                 _boardHeightPoints = (int)((BoardHeight - 2) * _pointsPerUnit);
                 BoardWidth = BoardHeight * Screen.width / Screen.height;
                 _boardWidthRange = _boardHeightRange * Screen.width / Screen.height - 1;
@@ -131,8 +149,20 @@ public class ConfigSingleton{
         }
     }
 
+    public TargetData RecalculateCoordinates(TargetData inputData)
+    {
+        inputData.XPixelPosition = (int)(_centerPixelPosition[0] + (_pixelsPerUnit * inputData.XUnitPosition));
+        inputData.YPixelPosition = (int)(_centerPixelPosition[1] + (_pixelsPerUnit * inputData.YUnitPosition));
+        inputData.PixelSize = (int) (_pixelsPerUnit * inputData.UnitSize);
+        inputData.PixelOriented = true;
+        return inputData;
+    }
+    #endregion
+
     private ConfigSingleton()
     {
+        _pointsPerUnit = 100;
+        _centerPixelPosition = new Vector2((float) Screen.width / 2, (float) Screen.height / 2);
         SetCameraProperties(DisplayMode.ConstantUnitSize);
         _rng = new System.Random();
         IsSystemReady = false;
@@ -147,15 +177,5 @@ public class ConfigSingleton{
         if (_instance == null)
             _instance = new ConfigSingleton();
         return _instance;
-    }
-
-    public MyNetworkConfig GetMyNetworkConfig()
-    {
-        return this._myNetworkConfig;
-    }
-
-    public void SetMyNetworkConfig(MyNetworkConfig myNetworkConfig)
-    {
-        this._myNetworkConfig = myNetworkConfig;
     }
 }
