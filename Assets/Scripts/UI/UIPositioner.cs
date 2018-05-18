@@ -6,8 +6,9 @@ namespace UI
 {
     public class UIPositioner
     {
-        public static GameObject CenterInParent(GameObject gameObject)
+        public static GameObject CenterInParent(GameObject gameObject, GameObject parent)
         {
+            gameObject.transform.parent = parent.transform;
             gameObject.transform.localScale = Vector3.one;
             gameObject.transform.localPosition = Vector3.zero;
             return gameObject;
