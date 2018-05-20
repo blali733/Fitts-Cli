@@ -151,6 +151,7 @@ public class ConfigSingleton{
 
     public TargetData RecalculateCoordinates(TargetData inputData)
     {
+        inputData.Duration = inputData.DestroyTime - inputData.SpawnTime;
         inputData.XPixelPosition = (int)(_centerPixelPosition[0] + (_pixelsPerUnit * inputData.XUnitPosition));
         inputData.YPixelPosition = (int)(_centerPixelPosition[1] + (_pixelsPerUnit * inputData.YUnitPosition));
         inputData.PixelSize = (int) (_pixelsPerUnit * inputData.UnitSize);
@@ -174,8 +175,6 @@ public class ConfigSingleton{
     //Instance getter
     public static ConfigSingleton GetInstance()
     {
-        if (_instance == null)
-            _instance = new ConfigSingleton();
-        return _instance;
+        return _instance ?? (_instance = new ConfigSingleton());
     }
 }

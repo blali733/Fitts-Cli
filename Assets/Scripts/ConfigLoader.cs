@@ -8,8 +8,16 @@ using SharedTypes;
 [Serializable]
 public class ConfigContent
 {
-    public string serverIP;
-    public string serverPort;
+    public string ServerIp;
+    public string ServerPort;
+
+    public ConfigContent() { }
+
+    public ConfigContent(string serverIp, string serverPort)
+    {
+        ServerIp = serverIp;
+        ServerPort = serverPort;
+    }
 }
 
 public class ConfigLoader : MonoBehaviour {
@@ -19,16 +27,12 @@ public class ConfigLoader : MonoBehaviour {
         string config = LoadFile();
 	    ConfigContent configuration = JsonUtility.FromJson<ConfigContent>(config);
         ConfigSingleton configInstance = ConfigSingleton.GetInstance();
-        configInstance.SetMyNetworkConfig(new MyNetworkConfig(configuration.serverIP, configuration.serverPort));
+        configInstance.SetMyNetworkConfig(new MyNetworkConfig(configuration.ServerIp, configuration.ServerPort));
+        transform.GetComponent<NetworkConnectionConfigurator>().SetupConnection();
 	}
 
     private string LoadFile()
     {
         return File.ReadAllText("./config.json");
     }
-
-    // Update is called once per frame
-    private void Update () {
-		
-	}
 }
