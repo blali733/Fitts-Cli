@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using UnityEngine;
 using UnityEngine.Networking;
 using SharedTypes;
@@ -22,5 +23,8 @@ public class MyNetworkManager : NetworkManager
     {
         TestCasesMessage msg = message.ReadMessage<TestCasesMessage>();
         _config.SetTestCases(msg.TestCases);
+        FindObjectOfType<MainLoop>().GotConfig();
     }
+
+
 }

@@ -432,6 +432,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ExperimentController: {fileID: 1568744977089894, guid: 0058a254595d6e5468651802cec8e35c,
     type: 2}
+  WaitingScreen: {fileID: 1461987190073962, guid: 8be095a2661f3ee458544a42b2bff0e5,
+    type: 2}
+  MainCanvas: {fileID: 450341145}
 --- !u!4 &1532449065
 Transform:
   m_ObjectHideFlags: 0
