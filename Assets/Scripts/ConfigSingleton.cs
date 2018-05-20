@@ -8,11 +8,13 @@ using SharedTypes;
 
 
 
-public class ConfigSingleton{
+public class ConfigSingleton
+{
     //Singleton instance
     private static ConfigSingleton _instance;
 
     #region Variables
+
     private MyNetworkConfig _myNetworkConfig;
     private int _boardHeightPoints;
     private int _boardWidthPoints;
@@ -24,21 +26,28 @@ public class ConfigSingleton{
     private int _maxRange;
     private readonly System.Random _rng;
     private List<TestCase> _testCaseList;
-    
+
     public float BoardWidth { get; private set; }
 
     public float BoardHeight { get; private set; }
 
     public bool IsSystemReady { get; private set; }
+
     #endregion
 
     #region Getters and setters
+
     public List<TestCase> GetTestCases()
     {
         return _testCaseList;
     }
 
-    public MyNetworkConfig GetMyNetworkConfig()
+    public void SetTestCases(List<TestCase> cases)
+    {
+        _testCaseList = cases;
+    }
+
+public MyNetworkConfig GetMyNetworkConfig()
     {
         return this._myNetworkConfig;
     }
@@ -168,8 +177,8 @@ public class ConfigSingleton{
         _rng = new System.Random();
         IsSystemReady = false;
         _testCaseList = new List<TestCase>();
-        TestCase testCase = new TestCase(20, ColorMode.StaticGreen, DisplayMode.ConstantUnitSize, 75, 125, DistanceMode.EqualDistance, 5);
-        _testCaseList.Add(testCase);
+        //TestCase testCase = new TestCase(20, ColorMode.StaticGreen, DisplayMode.ConstantUnitSize, 75, 125, DistanceMode.EqualDistance, 5);
+        //_testCaseList.Add(testCase);
     }
 
     //Instance getter

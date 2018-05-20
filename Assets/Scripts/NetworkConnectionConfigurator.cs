@@ -21,9 +21,9 @@ public class NetworkConnectionConfigurator : MonoBehaviour
     public void SetupConnection()
     {
         _networkConfig = _config.GetMyNetworkConfig();
-        NetworkManager.singleton.networkAddress = _networkConfig.Address;
-        NetworkManager.singleton.networkPort = int.Parse(_networkConfig.Port);
-        NetworkManager.singleton.StartClient();
+        MyNetworkManager.singleton.networkAddress = _networkConfig.Address;
+        MyNetworkManager.singleton.networkPort = int.Parse(_networkConfig.Port);
+        MyNetworkManager.singleton.StartClient();
     }
 
     // Update is called once per frame
