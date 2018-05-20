@@ -16,7 +16,22 @@ public class MyNetworkManager : NetworkManager
 
     public override void OnClientConnect(NetworkConnection conn)
     {
+        Debug.Log("Got connection with server!");
         singleton.client.RegisterHandler(MyMsgType.TestCases, GetConfiguration);
+    }
+
+    public override void OnClientDisconnect(NetworkConnection conn)
+    {
+        if (conn.lastError == NetworkError.Timeout)
+        {
+            StopClient();
+            Debug.Log("Attempting recconect.");
+            StartClient();
+        }
+        else
+        {
+            base.OnClientDisconnect(conn);
+        }
     }
 
     public void GetConfiguration(NetworkMessage message)
@@ -26,5 +41,8 @@ public class MyNetworkManager : NetworkManager
         FindObjectOfType<MainLoop>().GotConfig();
     }
 
-
+    private void OnApplicationQuit()
+    {
+        StopClient();
+    }
 }
