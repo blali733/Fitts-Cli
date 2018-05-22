@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace UI
 {
-    public class UIPositioner
+    public class UIHelper
     {
         public static GameObject CenterInParent(GameObject gameObject, GameObject parent)
         {

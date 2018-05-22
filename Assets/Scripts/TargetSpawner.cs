@@ -42,6 +42,7 @@ public class TargetSpawner : MonoBehaviour
         {
             _targetData.DestroyTime = now;
             SendMessageUpwards("TargetAcquired", _targetData);
+            SendMessageUpwards("TestCompleted");
         }
         else
         {
