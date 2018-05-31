@@ -20,13 +20,15 @@ public class GameManager : MonoBehaviour
 	void Start ()
 	{
 	    _testCounter = 0;
-	    _canvas = GameObject.Find("Canvas");
-	    GameObject window = UIHelper.CenterInParent(Instantiate(TestAnnouncer), _canvas);
-	    window.transform.Find("Button").gameObject.GetComponent<Button>().onClick.AddListener(delegate {transform.root.GetComponent<ButtonBehaviour>().TestAnnouncer();});
-        _config = ConfigSingleton.GetInstance();
+	    _config = ConfigSingleton.GetInstance();
 	    _targetDatas = new List<TargetData>();
 	    _experimentResults = new List<List<TargetData>>();      // Caring about complexity is overrated.
 	    _testCases = _config.GetTestCases();
+        _canvas = GameObject.Find("Canvas");
+	    GameObject window = UIHelper.CenterInParent(Instantiate(TestAnnouncer), _canvas);
+	    window = UIHelper.AddTestDescription(window, _testCases[_testCounter].Name);
+	    window.transform.Find("Button").gameObject.GetComponent<Button>().onClick.AddListener(delegate {transform.root.GetComponent<ButtonBehaviour>().TestAnnouncer();});
+        
 	}
 
     public void MessageClosed()
@@ -46,6 +48,7 @@ public class GameManager : MonoBehaviour
         if (_testCounter < _testCases.Count)
         {
             GameObject window = UIHelper.CenterInParent(Instantiate(TestAnnouncer), _canvas);
+            window = UIHelper.AddTestDescription(window, _testCases[_testCounter].Name);
             window.transform.Find("Button").gameObject.GetComponent<Button>().onClick.AddListener(delegate
             {
                 transform.root.GetComponent<ButtonBehaviour>().TestAnnouncer();

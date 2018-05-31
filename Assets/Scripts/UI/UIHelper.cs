@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace UI
 {
@@ -11,6 +12,12 @@ namespace UI
             gameObject.transform.parent = parent.transform;
             gameObject.transform.localScale = Vector3.one;
             gameObject.transform.localPosition = Vector3.zero;
+            return gameObject;
+        }
+
+        public static GameObject AddTestDescription(GameObject gameObject, string desc)
+        {
+            gameObject.transform.Find("Text").GetComponent<Text>().text = string.Format("Prepare for: {0}", desc);
             return gameObject;
         }
     }

@@ -11,4 +11,9 @@ public class ButtonBehaviour : MonoBehaviour
         Destroy(Canvas.transform.Find("TestAnnouncer(Clone)").gameObject);
         BroadcastMessage("MessageClosed");
     }
+
+    public void HideConfig()
+    {
+        BroadcastMessage("ConfigClosed");
+    }
 }

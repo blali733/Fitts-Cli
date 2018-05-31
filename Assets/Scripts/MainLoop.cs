@@ -6,11 +6,13 @@ using UnityEngine;
 using SharedTypes;
 using UI;
 using UnityEngine.Networking;
+using UnityEngine.UI;
 
 public class MainLoop : MonoBehaviour
 {
     public GameObject ExperimentController;
     public GameObject WaitingScreen;
+    public GameObject DataDiplayScreen;
     public Canvas MainCanvas;
     private ConfigSingleton _config;
     private GameObject _waiting;
@@ -18,7 +20,6 @@ public class MainLoop : MonoBehaviour
     private void Start()
     {
         _config = ConfigSingleton.GetInstance();
-        // Temporary solution
         _waiting = UIHelper.CenterInParent(Instantiate(WaitingScreen), MainCanvas.gameObject);
     }
 
@@ -39,6 +40,14 @@ public class MainLoop : MonoBehaviour
     }
 
     public void GotConfig()
+    {
+        Destroy(_waiting);
+        _waiting = UIHelper.CenterInParent(Instantiate(DataDiplayScreen), MainCanvas.gameObject);
+        _waiting.transform.GetComponent<StatusInfoDisplay>().SetupDisplay(_config.GetMyNetworkConfig().Address, _config.GetMyNetworkConfig().Port, _config.GetTestCases().Count);
+        _waiting.transform.Find("Button").gameObject.GetComponent<Button>().onClick.AddListener(delegate { transform.root.GetComponent<ButtonBehaviour>().HideConfig(); });
+    }
+
+    public void ConfigClosed()
     {
         Destroy(_waiting);
         GameObject experiment = Instantiate(ExperimentController);
