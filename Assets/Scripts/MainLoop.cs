@@ -37,6 +37,8 @@ public class MainLoop : MonoBehaviour
         }
         MyNetworkManager.singleton.client.Send(MyMsgType.TargetDatas, new RawTargetDatasMessage(experimentTargetDatas));
         MyNetworkManager.singleton.client.Send(MyMsgType.TargetInfos, new TargetInfosMessage(experimentTargetInfos));
+        GameObject experiment = Instantiate(ExperimentController);
+        experiment.transform.parent = this.transform;
     }
 
     public void GotConfig()

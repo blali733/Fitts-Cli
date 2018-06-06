@@ -96,3 +96,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   TestAnnouncer: {fileID: 1761873308657950, guid: cd4081e46ae025c45ac04875ceefa980,
     type: 2}
+  UserType: {fileID: 1270718600028186, guid: 038eb9ff1fc24994a8ee6d5f4623cd3f, type: 2}
+  UserList: {fileID: 1558024247079282, guid: 06403c8afc410c74ca75673028aaf1ed, type: 2}
+  UserListWaiting: {fileID: 1706668085124222, guid: 9556c8ef7d9dded458c2b3194cfc7488,
+    type: 2}
+  Questionarie: {fileID: 1170499934462318, guid: 21be0f3a8d528c94ba15698060018157,
+    type: 2}

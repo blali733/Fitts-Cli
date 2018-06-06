@@ -12,8 +12,25 @@ public class ButtonBehaviour : MonoBehaviour
         BroadcastMessage("MessageClosed");
     }
 
+    public void NewUser()
+    {
+        Destroy(Canvas.transform.Find("UserType(Clone)").gameObject);
+        BroadcastMessage("NewUserForm");
+    }
+
+    public void ReturningUser()
+    {
+        Destroy(Canvas.transform.Find("UserType(Clone)").gameObject);
+        BroadcastMessage("ReturningUserForm");
+    }
+
     public void HideConfig()
     {
         BroadcastMessage("ConfigClosed");
+    }
+
+    public void SelectPlayer(string name)
+    {
+        // TODO: Implement
     }
 }

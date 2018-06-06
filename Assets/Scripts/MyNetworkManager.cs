@@ -18,6 +18,7 @@ public class MyNetworkManager : NetworkManager
     {
         Debug.Log("Got connection with server!");
         singleton.client.RegisterHandler(MyMsgType.TestCases, GetConfiguration);
+        singleton.client.RegisterHandler(MyMsgType.UserList, GetUserList);
     }
 
     public override void OnClientDisconnect(NetworkConnection conn)
@@ -32,6 +33,12 @@ public class MyNetworkManager : NetworkManager
         {
             base.OnClientDisconnect(conn);
         }
+    }
+
+    public void GetUserList(NetworkMessage message)
+    {
+        UserListMessage msg = message.ReadMessage<UserListMessage>();
+        GameObject.Find("GameController(Clone)").GetComponent<GameManager>().GotReturningUsers(msg.UserList);
     }
 
     public void GetConfiguration(NetworkMessage message)

@@ -19,7 +19,6 @@ public class TargetController : MonoBehaviour {
 
     public void Construct(double scale, Vector2 position)
     {
-        // I really LOVE C# for this shit...
         Construct(scale, position, Color.red);
     }
 

@@ -8,14 +8,12 @@ using UnityEngine.Networking;
 public class NetworkConnectionConfigurator : MonoBehaviour
 {
     private MyNetworkConfig _networkConfig;
-    private bool _started;
     private ConfigSingleton _config;
 
     // Use this for initialization
     void Start()
     {
         _config = ConfigSingleton.GetInstance();
-        _started = false;
     }
 
     public void SetupConnection()
@@ -25,9 +23,4 @@ public class NetworkConnectionConfigurator : MonoBehaviour
         MyNetworkManager.singleton.networkPort = int.Parse(_networkConfig.Port);
         MyNetworkManager.singleton.StartClient();
     }
-
-    // Update is called once per frame
-    void Update () {
-		
-	}
 }
