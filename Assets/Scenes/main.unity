@@ -276,7 +276,6 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 858120544}
-  - component: {fileID: 858120543}
   - component: {fileID: 858120542}
   - component: {fileID: 858120541}
   m_Layer: 0
@@ -378,17 +377,6 @@ MonoBehaviour:
   matchSize: 4
   isNetworkActive: 0
   matchMaker: {fileID: 0}
---- !u!114 &858120543
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 858120540}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1c6c56c492683be4d8970f5b8764bf77, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!4 &858120544
 Transform:
   m_ObjectHideFlags: 0
@@ -435,6 +423,8 @@ MonoBehaviour:
   WaitingScreen: {fileID: 1461987190073962, guid: 8be095a2661f3ee458544a42b2bff0e5,
     type: 2}
   DataDiplayScreen: {fileID: 1714681570459818, guid: c4b085e9014a14f45aff311c4b41f6f2,
+    type: 2}
+  ConnectionBroker: {fileID: 1634784329176890, guid: b5974e52597869249a62566b36925cc3,
     type: 2}
   MainCanvas: {fileID: 450341145}
 --- !u!4 &1532449065

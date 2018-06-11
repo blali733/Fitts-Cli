@@ -26,8 +26,7 @@ public class MyNetworkManager : NetworkManager
         if (conn.lastError == NetworkError.Timeout)
         {
             StopClient();
-            Debug.Log("Attempting recconect.");
-            StartClient();
+            GameObject.Find("MainLoopController").gameObject.GetComponent<MainLoop>().ConnectionFailed();
         }
         else
         {
