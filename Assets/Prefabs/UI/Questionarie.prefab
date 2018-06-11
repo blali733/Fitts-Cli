@@ -1121,7 +1121,7 @@ GameObject:
   - component: {fileID: 114218063361852082}
   - component: {fileID: 114765184776513080}
   m_Layer: 5
-  m_Name: TouchAdaptation (1)
+  m_Name: Activities
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

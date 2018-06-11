@@ -5,6 +5,7 @@ using UnityEngine;
 using SharedTypes;
 using UI;
 using UnityEngine.Experimental.UIElements;
+using UnityEngine.UI;
 using Button = UnityEngine.UI.Button;
 
 public class GameManager : MonoBehaviour
@@ -21,6 +22,7 @@ public class GameManager : MonoBehaviour
     private List<TestCase> _testCases;
     private ConfigSingleton _config;
     private int _testCounter;
+    private GameObject _userForm;
 
 	// Use this for initialization
 	void Start ()
@@ -42,7 +44,25 @@ public class GameManager : MonoBehaviour
 
     public void NewUserForm()
     {
-        GameObject window = UIHelper.CenterInParent(Instantiate(Questionarie), _canvas);
+        GameObject UserForm = UIHelper.CenterInParent(Instantiate(Questionarie), _canvas);
+        UserForm.transform.Find("Button").gameObject.GetComponent<Button>().onClick.AddListener(ValidateForm);
+    }
+
+    public void ValidateForm()
+    {
+        if (_userForm.transform.Find("UserName").gameObject.GetComponent<Text>().text != "")
+        {
+            // Save to DB
+            StoredUser user = new StoredUser(_userForm.transform.Find("UserName").gameObject.GetComponent<Text>().text, Helpers.ParseQuestionarie(_userForm));
+            MyNetworkManager.singleton.client.Send(MyMsgType.NewUserData, new StoredUserMessage(user));
+            Destroy(_userForm);
+            SetupTestWindow();
+        }
+        else
+        {
+            // Do nothing
+            return;
+        }
     }
 
     public void ReturningUserForm()
@@ -54,6 +74,21 @@ public class GameManager : MonoBehaviour
     public void GotReturningUsers(List<User> userList)
     {
         GameObject window = UIHelper.CenterInParent(Instantiate(UserList), _canvas);
+        window.transform.Find("Button").gameObject.GetComponent<Button>().onClick.AddListener(delegate {
+            transform.root.GetComponent<ButtonBehaviour>().ReturnToMain();
+        });
+
+    }
+
+    public void ReturnToMain()
+    {
+        GameObject window = UIHelper.CenterInParent(Instantiate(UserType), _canvas);
+        window.transform.Find("New").gameObject.GetComponent<Button>().onClick.AddListener(delegate {
+            transform.root.GetComponent<ButtonBehaviour>().NewUser();
+        });
+        window.transform.Find("Returning").gameObject.GetComponent<Button>().onClick.AddListener(delegate {
+            transform.root.GetComponent<ButtonBehaviour>().ReturningUser();
+        });
     }
 
     public void SetupTestWindow()
