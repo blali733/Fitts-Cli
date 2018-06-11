@@ -9,9 +9,10 @@ namespace UI
     {
         public static GameObject CenterInParent(GameObject gameObject, GameObject parent)
         {
-            gameObject.transform.parent = parent.transform;
-            gameObject.transform.localScale = Vector3.one;
-            gameObject.transform.localPosition = Vector3.zero;
+            gameObject.transform.SetParent(parent.transform, false);
+//            gameObject.transform.parent = parent.transform;
+//            gameObject.transform.localScale = Vector3.one;
+//            gameObject.transform.localPosition = Vector3.zero;
             return gameObject;
         }
 

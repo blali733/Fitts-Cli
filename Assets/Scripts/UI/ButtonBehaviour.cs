@@ -37,6 +37,6 @@ public class ButtonBehaviour : MonoBehaviour
 
     public void SelectPlayer(string name)
     {
-        // TODO: Implement
+        BroadcastMessage("SelectUser", name);
     }
 }

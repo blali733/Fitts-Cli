@@ -56,10 +56,10 @@ public class MainLoop : MonoBehaviour
         _waiting.transform.Find("ErrorText").gameObject.GetComponent<Text>().text = "Connection Failed";
     }
 
-    public void ExperimentCompleted(List<List<TargetData>> experimentTargetDatas)
+    public void ExperimentCompleted(RawTargetDatasMessage.Pack data)
     {
         List<List<TargetInfo>> experimentTargetInfos = new List<List<TargetInfo>>();
-        foreach (var list in experimentTargetDatas)
+        foreach (var list in data.TargetDatas)
         {
             List<TargetInfo> iterationTargetInfos = new List<TargetInfo>();
             foreach (var i in Enumerable.Range(1, list.Count - 1))
@@ -68,8 +68,8 @@ public class MainLoop : MonoBehaviour
             }
             experimentTargetInfos.Add(iterationTargetInfos);
         }
-        MyNetworkManager.singleton.client.Send(MyMsgType.TargetDatas, new RawTargetDatasMessage(experimentTargetDatas));
-        MyNetworkManager.singleton.client.Send(MyMsgType.TargetInfos, new TargetInfosMessage(experimentTargetInfos));
+        MyNetworkManager.singleton.client.Send(MyMsgType.TargetDatas, new RawTargetDatasMessage(data.TargetDatas, data.User));
+        MyNetworkManager.singleton.client.Send(MyMsgType.TargetInfos, new TargetInfosMessage(experimentTargetInfos, data.User));
         GameObject experiment = Instantiate(ExperimentController);
         experiment.transform.parent = this.transform;
     }

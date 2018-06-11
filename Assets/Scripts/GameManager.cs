@@ -23,6 +23,7 @@ public class GameManager : MonoBehaviour
     private ConfigSingleton _config;
     private int _testCounter;
     private GameObject _userForm;
+    private string _userName;
 
 	// Use this for initialization
 	void Start ()
@@ -44,16 +45,17 @@ public class GameManager : MonoBehaviour
 
     public void NewUserForm()
     {
-        GameObject UserForm = UIHelper.CenterInParent(Instantiate(Questionarie), _canvas);
-        UserForm.transform.Find("Button").gameObject.GetComponent<Button>().onClick.AddListener(ValidateForm);
+        _userForm = UIHelper.CenterInParent(Instantiate(Questionarie), _canvas);
+        _userForm.transform.Find("Button").gameObject.GetComponent<Button>().onClick.AddListener(ValidateForm);
     }
 
     public void ValidateForm()
     {
-        if (_userForm.transform.Find("UserName").gameObject.GetComponent<Text>().text != "")
+        if (_userForm.transform.Find("UserName").Find("Text").gameObject.GetComponent<Text>().text != "")
         {
             // Save to DB
-            StoredUser user = new StoredUser(_userForm.transform.Find("UserName").gameObject.GetComponent<Text>().text, Helpers.ParseQuestionarie(_userForm));
+            _userName = _userForm.transform.Find("UserName").Find("Text").gameObject.GetComponent<Text>().text;
+            StoredUser user = new StoredUser(_userForm.transform.Find("UserName").Find("Text").gameObject.GetComponent<Text>().text, Helpers.ParseQuestionarie(_userForm));
             MyNetworkManager.singleton.client.Send(MyMsgType.NewUserData, new StoredUserMessage(user));
             Destroy(_userForm);
             SetupTestWindow();
@@ -65,6 +67,13 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public void SelectUser(string userName)
+    {
+        Destroy(_canvas.transform.Find("UserList(Clone)").gameObject);
+        _userName = userName;
+        SetupTestWindow();
+    }
+
     public void ReturningUserForm()
     {
         GameObject window = UIHelper.CenterInParent(Instantiate(UserListWaiting), _canvas);
@@ -73,11 +82,15 @@ public class GameManager : MonoBehaviour
 
     public void GotReturningUsers(List<User> userList)
     {
+        Destroy(_canvas.transform.Find("UserListWaiting(Clone)").gameObject);
         GameObject window = UIHelper.CenterInParent(Instantiate(UserList), _canvas);
         window.transform.Find("Button").gameObject.GetComponent<Button>().onClick.AddListener(delegate {
             transform.root.GetComponent<ButtonBehaviour>().ReturnToMain();
         });
-
+        foreach (var user in userList)
+        {
+            window.GetComponent<ListController>().Populate(user.Name, user.Name);
+        }
     }
 
     public void ReturnToMain()
@@ -114,13 +127,14 @@ public class GameManager : MonoBehaviour
     public void TestCompleted()
     {
         _experimentResults.Add(_targetDatas);
+        _targetDatas = new List<TargetData>();
         if (_testCounter < _testCases.Count)
         {
             SetupTestWindow();
         }
         else
         {
-            SendMessageUpwards("ExperimentCompleted", _experimentResults);
+            SendMessageUpwards("ExperimentCompleted", new RawTargetDatasMessage.Pack(_experimentResults, _userName));
             Destroy(transform.gameObject);
         }
     }
