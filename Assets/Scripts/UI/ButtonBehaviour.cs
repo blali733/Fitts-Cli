@@ -27,7 +27,7 @@ public class ButtonBehaviour : MonoBehaviour
     public void ReturnToMain()
     {
         Destroy(Canvas.transform.Find("UserList(Clone)").gameObject);
-        BroadcastMessage("ReturnToMain");
+        BroadcastMessage("ReturnToMainTgt");
     }
 
     public void HideConfig()

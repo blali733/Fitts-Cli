@@ -93,7 +93,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void ReturnToMain()
+    public void ReturnToMainTgt()
     {
         GameObject window = UIHelper.CenterInParent(Instantiate(UserType), _canvas);
         window.transform.Find("New").gameObject.GetComponent<Button>().onClick.AddListener(delegate {
