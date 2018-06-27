@@ -81,6 +81,8 @@ public class MainLoop : MonoBehaviour
         _waiting = UIHelper.CenterInParent(Instantiate(DataDiplayScreen), MainCanvas.gameObject);
         _waiting.transform.GetComponent<StatusInfoDisplay>().SetupDisplay(_config.GetMyNetworkConfig().Address, _config.GetMyNetworkConfig().Port, _config.GetTestCases().Count);
         _waiting.transform.Find("Button").gameObject.GetComponent<Button>().onClick.AddListener(delegate { transform.root.GetComponent<ButtonBehaviour>().HideConfig(); });
+        _waiting.transform.Find("Button").gameObject.SetActive(false);
+        MyNetworkManager.singleton.client.Send(MyMsgType.DeviceData, new DeviceDataMessage(new DeviceIdentification(true)));
     }
 
     public void ConfigClosed()
