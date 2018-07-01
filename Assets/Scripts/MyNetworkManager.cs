@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.Networking;
 using SharedTypes;
 using SharedMessages;
+using UnityEngine.Networking.NetworkSystem;
 
 public class MyNetworkManager : NetworkManager
 {
@@ -19,6 +20,7 @@ public class MyNetworkManager : NetworkManager
         Debug.Log("Got connection with server!");
         singleton.client.RegisterHandler(MyMsgType.TestCases, GetConfiguration);
         singleton.client.RegisterHandler(MyMsgType.UserList, GetUserList);
+        singleton.client.RegisterHandler(MyMsgType.DeviceId, GotDevId);
     }
 
     public override void OnClientDisconnect(NetworkConnection conn)
@@ -32,6 +34,13 @@ public class MyNetworkManager : NetworkManager
         {
             base.OnClientDisconnect(conn);
         }
+    }
+
+    public void GotDevId(NetworkMessage message)
+    {
+        int id = message.ReadMessage<IntegerMessage>().value;
+        _config.DevId = id;
+        GameObject.Find("MainLoopController").gameObject.GetComponent<MainLoop>().GotDevID();
     }
 
     public void GetUserList(NetworkMessage message)

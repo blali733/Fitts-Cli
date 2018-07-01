@@ -64,7 +64,7 @@ public class MainLoop : MonoBehaviour
             List<TargetInfo> iterationTargetInfos = new List<TargetInfo>();
             foreach (var i in Enumerable.Range(1, list.Count - 1))
             {
-                iterationTargetInfos.Add(new TargetInfo(list[i-1], list[i]));
+                iterationTargetInfos.Add(new TargetInfo(list[i-1], list[i], _config.ColorDiffBg(list[i].Color)));
             }
             experimentTargetInfos.Add(iterationTargetInfos);
         }
@@ -83,6 +83,11 @@ public class MainLoop : MonoBehaviour
         _waiting.transform.Find("Button").gameObject.GetComponent<Button>().onClick.AddListener(delegate { transform.root.GetComponent<ButtonBehaviour>().HideConfig(); });
         _waiting.transform.Find("Button").gameObject.SetActive(false);
         MyNetworkManager.singleton.client.Send(MyMsgType.DeviceData, new DeviceDataMessage(new DeviceIdentification(true)));
+    }
+
+    public void GotDevID()
+    {
+        _waiting.transform.Find("Button").gameObject.SetActive(true);
     }
 
     public void ConfigClosed()

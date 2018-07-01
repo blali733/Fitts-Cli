@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Xml.Serialization;
+using Colourful;
 using UnityEngine;
 using SharedTypes;
 
@@ -25,12 +26,13 @@ public class ConfigSingleton
     private int _maxRange;
     private readonly System.Random _rng;
     private List<TestCase> _testCaseList;
+    private LabColor _skyboxColor;
 
     public float BoardWidth { get; private set; }
 
     public float BoardHeight { get; private set; }
 
-    public bool IsSystemReady { get; private set; }
+    public int DevId { get; set; }
 
     #endregion
 
@@ -168,16 +170,25 @@ public MyNetworkConfig GetMyNetworkConfig()
     }
     #endregion
 
+    public double ColorDiffBg(Color color)
+    {
+        LabColor temp = Helpers.Color2Lab(color);
+        return Helpers.LabDiff(temp, _skyboxColor);
+    }
+
+    public double ColorDiffBg(LabColor color)
+    {
+        return Helpers.LabDiff(color, _skyboxColor);
+    }
+
     private ConfigSingleton()
     {
         _pointsPerUnit = 100;
         _centerPixelPosition = new Vector2((float) Screen.width / 2, (float) Screen.height / 2);
         SetCameraProperties(DisplayMode.ConstantUnitSize);
         _rng = new System.Random();
-        IsSystemReady = false;
         _testCaseList = new List<TestCase>();
-        //TestCase testCase = new TestCase(20, ColorMode.StaticGreen, DisplayMode.ConstantUnitSize, 75, 125, DistanceMode.EqualDistance, 5);
-        //_testCaseList.Add(testCase);
+        _skyboxColor = Helpers.Color2Lab(Camera.main.backgroundColor);
     }
 
     //Instance getter

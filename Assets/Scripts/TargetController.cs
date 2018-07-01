@@ -4,17 +4,15 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class TargetController : MonoBehaviour {
-    private GameObject item;
+    private GameObject _item;
     GameObject _center;
-    GameObject _frame;
     ConfigSingleton _settings;
 
     // Use this for initialization
     private void Awake () {
         _settings = ConfigSingleton.GetInstance();
-        item = this.gameObject;
+        _item = this.gameObject;
         _center = this.gameObject.transform.Find("Center").gameObject;
-        _frame = this.gameObject.transform.Find("Frame").gameObject;
 	}
 
     public void Construct(double scale, Vector2 position)
@@ -24,8 +22,8 @@ public class TargetController : MonoBehaviour {
 
     public void Construct(double scale, Vector2 position, Color color)
     {
-        item.transform.localScale = new Vector3((float)scale, (float)scale, (float)scale);
-        item.transform.position = new Vector3(position[0], position[1], -1);
+        _item.transform.localScale = new Vector3((float)scale, (float)scale, (float)scale);
+        _item.transform.position = new Vector3(position[0], position[1], -1);
         SetColor(color);
     }
 
@@ -39,6 +37,6 @@ public class TargetController : MonoBehaviour {
     {
         Debug.Log("clicked");
         SendMessageUpwards("Respawn", DateTime.Now);
-        Destroy(item, 0);
+        Destroy(_item, 0);
     }
 }
