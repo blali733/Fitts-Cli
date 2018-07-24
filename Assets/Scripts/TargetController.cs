@@ -6,11 +6,9 @@ using UnityEngine;
 public class TargetController : MonoBehaviour {
     private GameObject _item;
     GameObject _center;
-    ConfigSingleton _settings;
 
     // Use this for initialization
     private void Awake () {
-        _settings = ConfigSingleton.GetInstance();
         _item = this.gameObject;
         _center = this.gameObject.transform.Find("Center").gameObject;
 	}
