@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using SharedTypes;
+using FittsLibrary;
 using UnityEngine;
 using UnityEngine.Networking;
 

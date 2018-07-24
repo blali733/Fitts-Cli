@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
 using System;
-using SharedTypes;
+using FittsLibrary;
 
 [Serializable]
 public class ConfigContent

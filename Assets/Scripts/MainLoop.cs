@@ -1,9 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using SharedMessages;
+using FittsLibrary.Messages;
 using UnityEngine;
-using SharedTypes;
+using FittsLibrary;
 using UI;
 using UnityEngine.Networking;
 using UnityEngine.UI;

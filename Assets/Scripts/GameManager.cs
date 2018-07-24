@@ -1,8 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using SharedMessages;
+using FittsLibrary.Messages;
 using UnityEngine;
-using SharedTypes;
+using FittsLibrary;
 using UI;
 using UnityEngine.Experimental.UIElements;
 using UnityEngine.UI;

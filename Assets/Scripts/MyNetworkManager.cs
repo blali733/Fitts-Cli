@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.ComponentModel.Design;
 using UnityEngine;
 using UnityEngine.Networking;
-using SharedTypes;
-using SharedMessages;
+using FittsLibrary;
+using FittsLibrary.Messages;
 using UnityEngine.Networking.NetworkSystem;
 
 public class MyNetworkManager : NetworkManager

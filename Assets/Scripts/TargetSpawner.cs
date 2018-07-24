@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using SharedTypes;
+using FittsLibrary;
 
 public class TargetSpawner : MonoBehaviour
 {
