@@ -51,7 +51,7 @@ public class TargetSpawner : MonoBehaviour
             GameObject target = Instantiate(TargetPrefab);
             target.transform.parent = this.transform;
             float size = _config.GetRandomSize(_range);
-            Vector2 position = _config.GetRandomPosition(_testCase.DistanceMode, _testCase.Radius, _targetData);
+            Vector2 position = _config.GetRandomPosition(_testCase.DistanceMode, _testCase.Radius, _targetData, size);
             Color color = _config.GetColor(_colorMode);
             _targetData = new TargetData(color, position[0], position[1], size, System.DateTime.Now, _config.ColorDiffBg(color));
             target.GetComponent<TargetController>().Construct(size, position, color);

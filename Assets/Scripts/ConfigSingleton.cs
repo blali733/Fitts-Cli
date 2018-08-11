@@ -63,8 +63,15 @@ public MyNetworkConfig GetMyNetworkConfig()
     #endregion
 
     #region Generators
-    public Vector2 GetRandomPosition(DistanceMode mode, float radius, TargetData targetData)
+    //TODO: Refactor this!!!
+    public Vector2 GetRandomPosition(DistanceMode mode, float radius, TargetData targetData, float size)
     {
+        float targetSize = 8 * size;
+        _boardHeightPoints = (int)((BoardHeight - targetSize) * _pointsPerUnit);
+        _boardHeightRange = (BoardHeight - targetSize) / 2;
+        _boardWidthPoints = (int)((BoardWidth - targetSize) * _pointsPerUnit);
+        _boardWidthRange = (BoardWidth - targetSize) / 2;
+        _maxRange = _boardHeightPoints * _boardWidthPoints;
         switch (mode)
         {
             case DistanceMode.Random:
@@ -82,12 +89,11 @@ public MyNetworkConfig GetMyNetworkConfig()
                 float constDeltaCompontent = radius * radius - prevX * prevX;
                 float minX = prevX - radius;
                 float maxX = prevX + radius;
-                float y1, y2;
                 foreach (var x in Helpers.FloatRange(minX>(-_boardWidthRange)?minX:(-_boardWidthRange), maxX < (_boardWidthRange) ? maxX : (_boardWidthRange),1/_pointsPerUnit))
                 {
                     var variableDeltaComponent = 2 * prevX * x - x * x;
-                    y1 = prevY + (float) Math.Sqrt(constDeltaCompontent + variableDeltaComponent);
-                    y2 = prevY - (float) Math.Sqrt(constDeltaCompontent + variableDeltaComponent);
+                    float y1 = prevY + (float) Math.Sqrt(constDeltaCompontent + variableDeltaComponent);
+                    float y2 = prevY - (float) Math.Sqrt(constDeltaCompontent + variableDeltaComponent);
                     if (Math.Abs(y1) <= _boardHeightRange)
                     {
                         correctPointsList.Add(new Vector2(x, y1));
@@ -129,37 +135,18 @@ public MyNetworkConfig GetMyNetworkConfig()
     #region Camera related
     public void SetCameraProperties(DisplayMode mode)
     {
-        switch (mode)
+        if (mode == DisplayMode.ConstantPixelSize)
         {
-            case DisplayMode.ConstantPixelSize:
-            {
-                Camera.main.GetComponent<Camera>().orthographicSize = (float)Screen.height / 100;
-                _pixelsPerUnit = 100;
-                _boardHeightRange = Camera.main.GetComponent<Camera>().orthographicSize;
-                BoardHeight = _boardHeightRange * 2;
-                _boardHeightPoints = (int)((BoardHeight - 2) * _pointsPerUnit);
-                _boardWidthRange = _boardHeightRange * Screen.width / Screen.height - 1;
-                _boardHeightRange--;
-                BoardWidth = BoardHeight * Screen.width / Screen.height;
-                _boardWidthPoints = (int)((BoardWidth - 2) * _pointsPerUnit);
-                _maxRange = _boardHeightPoints * _boardWidthPoints;
-                break;
-            }
-            case DisplayMode.ConstantUnitSize:
-            {
-                Camera.main.GetComponent<Camera>().orthographicSize = 10;
-                _pixelsPerUnit = (float) Screen.height / 10;
-                _boardHeightRange = Camera.main.GetComponent<Camera>().orthographicSize;
-                BoardHeight = _boardHeightRange * 2;
-                _boardHeightPoints = (int)((BoardHeight - 2) * _pointsPerUnit);
-                BoardWidth = BoardHeight * Screen.width / Screen.height;
-                _boardWidthRange = _boardHeightRange * Screen.width / Screen.height - 1;
-                _boardHeightRange--;
-                _boardWidthPoints = (int)((BoardWidth - 2) * _pointsPerUnit);
-                _maxRange = _boardHeightPoints * _boardWidthPoints;
-                break;
-            }
+            Camera.main.GetComponent<Camera>().orthographicSize = (float) Screen.height / 100;
+            _pixelsPerUnit = 100;
         }
+        else
+        {
+            Camera.main.GetComponent<Camera>().orthographicSize = 10;
+            _pixelsPerUnit = (float)Screen.height / 10;
+        }
+        BoardHeight = Camera.main.GetComponent<Camera>().orthographicSize * 2;
+        BoardWidth = BoardHeight * Screen.width / Screen.height;
     }
 
     public TargetData RecalculateCoordinates(TargetData inputData)
