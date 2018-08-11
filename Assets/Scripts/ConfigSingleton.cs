@@ -116,7 +116,7 @@ public MyNetworkConfig GetMyNetworkConfig()
         return size / (float)100.0;
     }
 
-    public Color GetColor(ColorMode colorMode)
+    public Color GetColor(ColorMode colorMode, int labCategory)
     {
         switch (colorMode)
         {
@@ -126,6 +126,9 @@ public MyNetworkConfig GetMyNetworkConfig()
                 return Color.red;
             case ColorMode.StaticBlue:
                 return Color.blue;
+            case ColorMode.Space:
+                Debug.Log(JsonUtility.ToJson(ColorRanges[labCategory]));
+                return ColorRanges[labCategory].Colors[_rng.Next(ColorRanges[labCategory].Colors.Count)];
             default:
                 return Color.black;
         }

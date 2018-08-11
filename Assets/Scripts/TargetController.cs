@@ -6,11 +6,14 @@ using UnityEngine;
 public class TargetController : MonoBehaviour {
     private GameObject _item;
     GameObject _center;
+    private Color _color;
+    private ConfigSingleton _config;
 
     // Use this for initialization
     private void Awake () {
         _item = this.gameObject;
         _center = this.gameObject.transform.Find("Center").gameObject;
+        _config = ConfigSingleton.GetInstance();
 	}
 
     public void Construct(double scale, Vector2 position)
@@ -29,11 +32,12 @@ public class TargetController : MonoBehaviour {
     {
         SpriteRenderer myRenderer = _center.GetComponent<SpriteRenderer>();
         myRenderer.color = color;
+        _color = color;
     }
 
     private void OnMouseDown()
     {
-        Debug.Log("clicked");
+        Debug.Log(_config.ColorDiffBg(_color));
         SendMessageUpwards("Respawn", DateTime.Now);
         Destroy(_item, 0);
     }
