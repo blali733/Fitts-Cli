@@ -85,9 +85,23 @@ public class MainLoop : MonoBehaviour
         MyNetworkManager.singleton.client.Send(MyMsgType.DeviceData, new DeviceDataMessage(new DeviceIdentification(true)));
     }
 
-    public void GotDevID()
+    public void GotColorSpace()
     {
         _waiting.transform.Find("Button").gameObject.SetActive(true);
+    }
+
+    public void GotDevID()
+    {
+        var tc = _config.GetTestCases();
+        foreach (var test in tc)
+        {
+            if (test.Color == ColorMode.Space)
+            {
+                MyNetworkManager.singleton.client.Send(MyMsgType.DataRequest, new RequestMessage(RequestType.ColorRanges));
+                return;
+            }
+        }
+        GotColorSpace();
     }
 
     public void ConfigClosed()

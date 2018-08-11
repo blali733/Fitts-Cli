@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Xml.Serialization;
 using Colourful;
+using Colourful.Conversion;
 using UnityEngine;
 using FittsLibrary;
 
@@ -33,6 +34,8 @@ public class ConfigSingleton
     public float BoardHeight { get; private set; }
 
     public int DevId { get; set; }
+
+    public List<ColorRange> ColorRanges { get; set; }
 
     #endregion
 

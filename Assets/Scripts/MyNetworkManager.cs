@@ -21,6 +21,7 @@ public class MyNetworkManager : NetworkManager
         singleton.client.RegisterHandler(MyMsgType.TestCases, GetConfiguration);
         singleton.client.RegisterHandler(MyMsgType.UserList, GetUserList);
         singleton.client.RegisterHandler(MyMsgType.DeviceId, GotDevId);
+        singleton.client.RegisterHandler(MyMsgType.ColorRanges, GotColorSpaces);
     }
 
     public override void OnClientDisconnect(NetworkConnection conn)
@@ -34,6 +35,12 @@ public class MyNetworkManager : NetworkManager
         {
             base.OnClientDisconnect(conn);
         }
+    }
+
+    public void GotColorSpaces(NetworkMessage message)
+    {
+        _config.ColorRanges = message.ReadMessage<ColorRangesMessage>().ColorRangeList;
+        GameObject.Find("MainLoopController").gameObject.GetComponent<MainLoop>().GotColorSpace();
     }
 
     public void GotDevId(NetworkMessage message)
