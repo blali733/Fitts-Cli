@@ -127,7 +127,7 @@ public MyNetworkConfig GetMyNetworkConfig()
             case ColorMode.StaticBlue:
                 return Color.blue;
             case ColorMode.Space:
-                Debug.Log(JsonUtility.ToJson(ColorRanges[labCategory]));
+                Debug.Log(ColorRanges[labCategory].Distance);
                 return ColorRanges[labCategory].Colors[_rng.Next(ColorRanges[labCategory].Colors.Count)];
             default:
                 return Color.black;
