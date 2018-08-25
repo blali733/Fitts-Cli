@@ -6,7 +6,9 @@ using FittsLibrary;
 
 public class TargetSpawner : MonoBehaviour
 {
-    public GameObject TargetPrefab;
+    public GameObject FramedTargetPrefab;
+    public GameObject FramelessTargetPrefab;
+    private GameObject TargetPrefab;
     private ConfigSingleton _config;
     private int _itemCounter = 0;
     private int _colorRangeCategory;
@@ -24,6 +26,7 @@ public class TargetSpawner : MonoBehaviour
     public void Setup(TestCase myTestCase)
     {
         _testCase = myTestCase;
+        TargetPrefab = (_testCase.TargetMode == TargetMode.Framed ? FramedTargetPrefab : FramelessTargetPrefab);
         _itemCounter = _testCase.TargetsCount;
         _colorRangeCategory = 0;
         _range = _testCase.MinTargetScale > _testCase.MaxTargetScale ? new Vector2Int(_testCase.MaxTargetScale, _testCase.MinTargetScale) : new Vector2Int(_testCase.MinTargetScale, _testCase.MaxTargetScale);
