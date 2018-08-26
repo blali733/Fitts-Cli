@@ -6,7 +6,7 @@ using Colourful;
 using Colourful.Conversion;
 using UnityEngine;
 using FittsLibrary;
-
+using Random = UnityEngine.Random;
 
 
 public class ConfigSingleton
@@ -16,6 +16,7 @@ public class ConfigSingleton
 
     #region Variables
 
+    private static int _targetRadius = 4;
     private MyNetworkConfig _myNetworkConfig;
     private int _boardHeightPoints;
     private int _boardWidthPoints;
@@ -63,54 +64,138 @@ public MyNetworkConfig GetMyNetworkConfig()
     #endregion
 
     #region Generators
-    //TODO: Refactor this!!!
-    public Vector2 GetRandomPosition(DistanceMode mode, float radius, TargetData targetData, float size)
+
+    private Vector2 GetIDRangeFromGroup(int group)
     {
-        float targetSize = 8 * size;
+        switch (group)
+        {
+            case 0:
+                return new Vector2(0, (float)1.5);
+            case 1:
+                return new Vector2((float)1.5, 3);
+            case 2:
+                return new Vector2(3, (float)4.7);
+        }
+        // Should not happen:
+        return new Vector2(0, 7);
+    }
+
+    private float GetRandomFloatFromRange(Vector2 range)
+    {
+        return Random.Range(range.x, range.y);
+    }
+
+    private Vector2 GetRandomPositionAtRange(float radius, float prevX, float prevY)
+    {
+        List<Vector2> correctPointsList = new List<Vector2>();
+        float constDeltaCompontent = radius * radius - prevX * prevX;
+        float minX = prevX - radius;
+        float maxX = prevX + radius;
+        foreach (var x in Helpers.FloatRange(minX>(-_boardWidthRange)?minX:(-_boardWidthRange), maxX < (_boardWidthRange) ? maxX : (_boardWidthRange),1/_pointsPerUnit))
+        {
+            var variableDeltaComponent = 2 * prevX * x - x * x;
+            float y1 = prevY + (float) Math.Sqrt(constDeltaCompontent + variableDeltaComponent);
+            float y2 = prevY - (float) Math.Sqrt(constDeltaCompontent + variableDeltaComponent);
+            if (Math.Abs(y1) <= _boardHeightRange)
+            {
+                correctPointsList.Add(new Vector2(x, y1));
+            }
+            if (Math.Abs(y2) <= _boardHeightRange)
+            {
+                correctPointsList.Add(new Vector2(x, y2));
+            }
+        }
+
+        if (correctPointsList.Count == 0)
+        {
+            Debug.Log("Critical error!");
+        }
+        return correctPointsList[_rng.Next(correctPointsList.Count)];
+    }
+
+    private float InitializeRanges(float targetScale)
+    {
+        float targetSize = 2 * _targetRadius * targetScale;
         _boardHeightPoints = (int)((BoardHeight - targetSize) * _pointsPerUnit);
         _boardHeightRange = (BoardHeight - targetSize) / 2;
         _boardWidthPoints = (int)((BoardWidth - targetSize) * _pointsPerUnit);
         _boardWidthRange = (BoardWidth - targetSize) / 2;
         _maxRange = _boardHeightPoints * _boardWidthPoints;
+        return targetSize;
+    }
+
+    private List<Vector2> CalculateActiveRegionBorders(float scale)
+    {
+        float targetSize = _targetRadius * scale/100;
+        float heightBorder = BoardHeight / 2 - targetSize;
+        float widthBorder = BoardWidth / 2 - targetSize;
+        return new List<Vector2>{
+            new Vector2(widthBorder, heightBorder),
+            new Vector2(-widthBorder, heightBorder),
+            new Vector2(-widthBorder, -heightBorder),
+            new Vector2(widthBorder, -heightBorder)
+        };
+    }
+
+    private int MaxTargetScale(float maxScale, float prevX, float prevY, float ID)
+    {
+        List<Vector2> borders = CalculateActiveRegionBorders(maxScale);
+        double maxDistance = 0;
+        foreach (var point in borders)
+        {
+            double dist = Math.Sqrt(Math.Pow(prevX - point.x, 2) + Math.Pow(prevY - point.y, 2));
+            if (dist > maxDistance)
+                maxDistance = dist;
+        }
+        double maxWidth = maxDistance / Math.Pow(2, ID - 1);
+        maxWidth /= 2;
+        return (int) (maxWidth / _targetRadius * 100);
+    }
+    
+    //TODO: Refactor this!!!
+    public Tuple<Vector2, float> GetRandomPosition(DistanceMode mode, float predefinedRadius, TargetData targetData, int group, Vector2Int scaleRange)
+    {
         switch (mode)
         {
             case DistanceMode.Random:
             {
+                float scale = GetRandomScale(scaleRange);
+                InitializeRanges(scale);
                 int pos = _rng.Next(_maxRange);
                 int y = pos % _boardHeightPoints - _boardHeightPoints / 2;
                 int x = pos / _boardHeightPoints - _boardWidthPoints / 2;
-                return new Vector2(x / _pointsPerUnit, y / _pointsPerUnit);
+                return new Tuple<Vector2, float>(new Vector2(x / _pointsPerUnit, y / _pointsPerUnit), scale);
             }
             case DistanceMode.EqualDistance:
             {
-                List<Vector2> correctPointsList = new List<Vector2>();
-                float prevX = targetData.XUnitPosition;
-                float prevY = targetData.YUnitPosition;
-                float constDeltaCompontent = radius * radius - prevX * prevX;
-                float minX = prevX - radius;
-                float maxX = prevX + radius;
-                foreach (var x in Helpers.FloatRange(minX>(-_boardWidthRange)?minX:(-_boardWidthRange), maxX < (_boardWidthRange) ? maxX : (_boardWidthRange),1/_pointsPerUnit))
-                {
-                    var variableDeltaComponent = 2 * prevX * x - x * x;
-                    float y1 = prevY + (float) Math.Sqrt(constDeltaCompontent + variableDeltaComponent);
-                    float y2 = prevY - (float) Math.Sqrt(constDeltaCompontent + variableDeltaComponent);
-                    if (Math.Abs(y1) <= _boardHeightRange)
-                    {
-                        correctPointsList.Add(new Vector2(x, y1));
-                    }
-                    if (Math.Abs(y2) <= _boardHeightRange)
-                    {
-                        correctPointsList.Add(new Vector2(x, y2));
-                    }
-                }
-                return correctPointsList[_rng.Next(correctPointsList.Count)];
+                float scale = GetRandomScale(scaleRange);
+                InitializeRanges(scale);
+                return new Tuple<Vector2, float>(GetRandomPositionAtRange(predefinedRadius, targetData.XUnitPosition, targetData.YUnitPosition), scale);
+            }
+            case DistanceMode.LinRegOptimised:
+            {
+                // Generate desired Difficulty Index:
+                Vector2 range = GetIDRangeFromGroup(group);
+                float desiredID = GetRandomFloatFromRange(range);
+                // Calculate bounds of target width:
+                int upperBound = MaxTargetScale(scaleRange.y, targetData.XUnitPosition, targetData.YUnitPosition,
+                    desiredID);
+                Vector2Int adjustedScaleRange =
+                    new Vector2Int(scaleRange.x, (scaleRange.y > upperBound ? upperBound : scaleRange.y));
+                // Generate scale and target size:
+                float scale = GetRandomScale(adjustedScaleRange);
+                float targetSize = InitializeRanges(scale);
+                // Find all posible target locations and pick one:
+                float radius = (float) (targetSize * Math.Pow(2, desiredID - 1));
+                return new Tuple<Vector2, float>(
+                    GetRandomPositionAtRange(radius, targetData.XUnitPosition, targetData.YUnitPosition), scale);
             }
             default:
-                return new Vector2(0, 0);
+                return new Tuple<Vector2, float>(new Vector2(0, 0), 0.0f);
         }
     }
 
-    public float GetRandomSize(Vector2Int range)
+    public float GetRandomScale(Vector2Int range)
     {
         int size = _rng.Next(range[0] > 100 ? 100 : range[0], range[1] > 100 ? 100 : range[1]);
         return size / (float)100.0;
