@@ -18,6 +18,7 @@ public class MainLoop : MonoBehaviour
     private ConfigSingleton _config;
     private GameObject _waiting;
     private GameObject _shadow;
+    private DeviceClass _deviceClass;
 
     private void Start()
     {
@@ -47,6 +48,7 @@ public class MainLoop : MonoBehaviour
         GameObject.Find("Configurator").gameObject.GetComponent<NetworkConnectionConfigurator>().SetupConnection();
         _waiting.SetActive(false);
         _shadow = UIHelper.CenterInParent(Instantiate(WaitingScreen), MainCanvas.gameObject);
+        _deviceClass = (DeviceClass) _waiting.transform.Find("Dropdown").gameObject.GetComponent<Dropdown>().value;
     }
 
     public void ConnectionFailed()
@@ -82,7 +84,7 @@ public class MainLoop : MonoBehaviour
         _waiting.transform.GetComponent<StatusInfoDisplay>().SetupDisplay(_config.GetMyNetworkConfig().Address, _config.GetMyNetworkConfig().Port, _config.GetTestCases().Count);
         _waiting.transform.Find("Button").gameObject.GetComponent<Button>().onClick.AddListener(delegate { transform.root.GetComponent<ButtonBehaviour>().HideConfig(); });
         _waiting.transform.Find("Button").gameObject.SetActive(false);
-        MyNetworkManager.singleton.client.Send(MyMsgType.DeviceData, new DeviceDataMessage(new DeviceIdentification(true)));
+        MyNetworkManager.singleton.client.Send(MyMsgType.DeviceData, new DeviceDataMessage(new DeviceIdentification(_deviceClass)));
     }
 
     public void GotColorSpace()
