@@ -15,13 +15,13 @@ public class ListController : MonoBehaviour
         Handle = GameObject.Find("MainLoopController");
     }
 
-    public void Populate(string message, string userName)
+    public void Populate(string message, string userCode)
     {
         GameObject item = Instantiate(ListElmentPrefab);
         item.transform.SetParent(_gridHandler.transform, false);
         item.transform.Find("Text").GetComponent<Text>().text = message;
         item.GetComponent<Button>().onClick.AddListener(delegate {
-            Handle.GetComponent<ButtonBehaviour>().SelectPlayer(userName);
+            Handle.GetComponent<ButtonBehaviour>().SelectPlayer(userCode);
         });
     }
 }

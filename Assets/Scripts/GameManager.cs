@@ -23,7 +23,7 @@ public class GameManager : MonoBehaviour
     private ConfigSingleton _config;
     private int _testCounter;
     private GameObject _userForm;
-    private string _userName;
+    private string _userCode;
 
 	// Use this for initialization
 	void Start ()
@@ -54,11 +54,10 @@ public class GameManager : MonoBehaviour
         if (_userForm.transform.Find("UserName").Find("Text").gameObject.GetComponent<Text>().text != "")
         {
             // Save to DB
-            _userName = _userForm.transform.Find("UserName").Find("Text").gameObject.GetComponent<Text>().text;
+//            _userCode = _userForm.transform.Find("UserName").Find("Text").gameObject.GetComponent<Text>().text;
             StoredUser user = new StoredUser(_userForm.transform.Find("UserName").Find("Text").gameObject.GetComponent<Text>().text, Helpers.ParseQuestionarie(_userForm));
             MyNetworkManager.singleton.client.Send(MyMsgType.NewUserData, new StoredUserMessage(user));
             Destroy(_userForm);
-            SetupTestWindow();
         }
         else
         {
@@ -67,10 +66,16 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void SelectUser(string userName)
+    public void GotUserCode(string code)
+    {
+        _userCode = code;
+        SetupTestWindow();
+    }
+
+    public void SelectUser(string userCode)
     {
         Destroy(_canvas.transform.Find("UserList(Clone)").gameObject);
-        _userName = userName;
+        _userCode = userCode;
         SetupTestWindow();
     }
 
@@ -89,7 +94,7 @@ public class GameManager : MonoBehaviour
         });
         foreach (var user in userList)
         {
-            window.GetComponent<ListController>().Populate(user.Name, user.Name);
+            window.GetComponent<ListController>().Populate(user.Name, user.Code);
         }
     }
 
@@ -134,7 +139,7 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            SendMessageUpwards("ExperimentCompleted", new RawTargetDatasMessage.Pack(_experimentResults, _userName));
+            SendMessageUpwards("ExperimentCompleted", new RawTargetDatasMessage.Pack(_experimentResults, _userCode));
             Destroy(transform.gameObject);
         }
     }

@@ -22,6 +22,7 @@ public class MyNetworkManager : NetworkManager
         singleton.client.RegisterHandler(MyMsgType.UserList, GetUserList);
         singleton.client.RegisterHandler(MyMsgType.DeviceId, GotDevId);
         singleton.client.RegisterHandler(MyMsgType.ColorRanges, GotColorSpaces);
+        singleton.client.RegisterHandler(MyMsgType.UserCode, GotUserCodeMessage);
     }
 
     public override void OnClientDisconnect(NetworkConnection conn)
@@ -36,6 +37,11 @@ public class MyNetworkManager : NetworkManager
             base.OnClientDisconnect(conn);
         }
     }
+
+    public void GotUserCodeMessage(NetworkMessage message)
+    {
+        GameObject.Find("GameController(Clone)").GetComponent<GameManager>().GotUserCode(message.ReadMessage<StringMessage>().value);
+    } 
 
     public void GotColorSpaces(NetworkMessage message)
     {
