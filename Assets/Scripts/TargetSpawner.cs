@@ -75,8 +75,11 @@ public class TargetSpawner : MonoBehaviour
                     _spacingGroup = 2;
                 }
             }
-            _itemCounter = _testCase.TargetsCount;
-            _spacingGroup--;
+            else
+            {
+                _itemCounter = _testCase.TargetsCount;
+                _spacingGroup--;
+            }
         }
         _targetData.DestroyTime = now;
         SendMessageUpwards("TargetAcquired", _targetData);
