@@ -9,6 +9,7 @@ using UnityEngine.Networking.NetworkSystem;
 
 public class MyNetworkManager : NetworkManager
 {
+    public static bool IsConnected = false;
     private ConfigSingleton _config;
     private void Start()
     {
@@ -18,6 +19,7 @@ public class MyNetworkManager : NetworkManager
     public override void OnClientConnect(NetworkConnection conn)
     {
         Debug.Log("Got connection with server!");
+//        IsConnected = true;
         singleton.client.RegisterHandler(MyMsgType.TestCases, GetConfiguration);
         singleton.client.RegisterHandler(MyMsgType.UserList, GetUserList);
         singleton.client.RegisterHandler(MyMsgType.DeviceId, GotDevId);
@@ -27,14 +29,16 @@ public class MyNetworkManager : NetworkManager
 
     public override void OnClientDisconnect(NetworkConnection conn)
     {
-        if (conn.lastError == NetworkError.Timeout)
+        if (conn.lastError == NetworkError.Timeout && !IsConnected)
         {
             StopClient();
             GameObject.Find("MainLoopController").gameObject.GetComponent<MainLoop>().ConnectionFailed();
         }
         else
         {
-            base.OnClientDisconnect(conn);
+            StopClient();
+            Debug.Log("Reconnecting...");
+            singleton.StartClient();
         }
     }
 
@@ -45,15 +49,21 @@ public class MyNetworkManager : NetworkManager
 
     public void GotColorSpaces(NetworkMessage message)
     {
-        _config.ColorRanges = message.ReadMessage<ColorRangesMessage>().ColorRangeList;
-        GameObject.Find("MainLoopController").gameObject.GetComponent<MainLoop>().GotColorSpace();
+        if (!IsConnected)
+        {
+            _config.ColorRanges = message.ReadMessage<ColorRangesMessage>().ColorRangeList;
+            GameObject.Find("MainLoopController").gameObject.GetComponent<MainLoop>().GotColorSpace();
+        }
     }
 
     public void GotDevId(NetworkMessage message)
     {
-        int id = message.ReadMessage<IntegerMessage>().value;
-        _config.DevId = id;
-        GameObject.Find("MainLoopController").gameObject.GetComponent<MainLoop>().GotDevID();
+        if (!IsConnected)
+        {
+            int id = message.ReadMessage<IntegerMessage>().value;
+            _config.DevId = id;
+            GameObject.Find("MainLoopController").gameObject.GetComponent<MainLoop>().GotDevID();
+        }
     }
 
     public void GetUserList(NetworkMessage message)
@@ -64,9 +74,12 @@ public class MyNetworkManager : NetworkManager
 
     public void GetConfiguration(NetworkMessage message)
     {
-        TestCasesMessage msg = message.ReadMessage<TestCasesMessage>();
-        _config.SetTestCases(msg.TestCases);
-        FindObjectOfType<MainLoop>().GotConfig();
+        if (!IsConnected)
+        {
+            TestCasesMessage msg = message.ReadMessage<TestCasesMessage>();
+            _config.SetTestCases(msg.TestCases);
+            FindObjectOfType<MainLoop>().GotConfig();
+        }
     }
 
     private void OnApplicationQuit()

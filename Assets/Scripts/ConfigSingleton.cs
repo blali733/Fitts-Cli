@@ -29,6 +29,7 @@ public class ConfigSingleton
     private readonly System.Random _rng;
     private List<TestCase> _testCaseList;
     private LabColor _skyboxColor;
+    public string DeviceString;
 
     public float BoardWidth { get; private set; }
 
@@ -225,12 +226,12 @@ public MyNetworkConfig GetMyNetworkConfig()
     {
         if (mode == DisplayMode.ConstantPixelSize)
         {
-            Camera.main.GetComponent<Camera>().orthographicSize = (float) Screen.height / 100;
+            Camera.main.orthographicSize = (float) Screen.height / 100;
             _pixelsPerUnit = 100;
         }
         else
         {
-            Camera.main.GetComponent<Camera>().orthographicSize = 10;
+            Camera.main.orthographicSize = 10;
             _pixelsPerUnit = (float)Screen.height / 10;
         }
         BoardHeight = Camera.main.GetComponent<Camera>().orthographicSize * 2;

@@ -1,5 +1,7 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using FittsLibrary.Messages;
 using UnityEngine;
@@ -70,10 +72,40 @@ public class MainLoop : MonoBehaviour
             }
             experimentTargetInfos.Add(iterationTargetInfos);
         }
-        MyNetworkManager.singleton.client.Send(MyMsgType.TargetDatas, new RawTargetDatasMessage(data.TargetDatas, data.User));
-        MyNetworkManager.singleton.client.Send(MyMsgType.TargetInfos, new TargetInfosMessage(experimentTargetInfos, data.User));
+//        MyNetworkManager.singleton.client.Send(MyMsgType.TargetDatas, new RawTargetDatasMessage(data.TargetDatas, data.User));
+//        MyNetworkManager.singleton.client.Send(MyMsgType.TargetInfos, new TargetInfosMessage(experimentTargetInfos, data.User, _config.DeviceString));
+        var paths = GetFileNames(data.User);
+        Helpers.SerializeObject(new RawTargetDatasMessage(data.TargetDatas, data.User), paths.Item1);
+        Helpers.SerializeObject(new TargetInfosMessage(experimentTargetInfos, data.User, _config.DeviceString), paths.Item2);
         GameObject experiment = Instantiate(ExperimentController);
         experiment.transform.parent = this.transform;
+    }
+
+    private Tuple<string, string> GetFileNames(string userName)
+    {
+        var path = GetFilePath() + "/" + GetCurrentDateTime() + "_" + userName + "-";
+        return new Tuple<string, string>(path + "rtd.dat", path + "ti.dat");
+    }
+
+    private string GetCurrentDateTime()
+    {
+        return DateTime.Now.Year+"."+DateTime.Now.Month+"."+DateTime.Now.Day+" "+DateTime.Now.Hour+"_"+DateTime.Now.Minute+"_"+DateTime.Now.Second;
+    }
+    
+    private string GetFilePath()
+    {
+        string path;
+        if (Application.platform == RuntimePlatform.Android)
+        {
+            path = Application.persistentDataPath;
+        }
+        else
+        {
+            path = ".";
+        }
+        path += "/results";
+        Directory.CreateDirectory(path);
+        return path;
     }
 
     public void GotConfig()
@@ -84,12 +116,15 @@ public class MainLoop : MonoBehaviour
         _waiting.transform.GetComponent<StatusInfoDisplay>().SetupDisplay(_config.GetMyNetworkConfig().Address, _config.GetMyNetworkConfig().Port, _config.GetTestCases().Count);
         _waiting.transform.Find("Button").gameObject.GetComponent<Button>().onClick.AddListener(delegate { transform.root.GetComponent<ButtonBehaviour>().HideConfig(); });
         _waiting.transform.Find("Button").gameObject.SetActive(false);
-        MyNetworkManager.singleton.client.Send(MyMsgType.DeviceData, new DeviceDataMessage(new DeviceIdentification(_deviceClass)));
+        var dev = new DeviceDataMessage(new DeviceIdentification(_deviceClass));
+        _config.DeviceString = dev.DeviceIdentification.DevId;
+        MyNetworkManager.singleton.client.Send(MyMsgType.DeviceData, dev);
     }
 
     public void GotColorSpace()
     {
         _waiting.transform.Find("Button").gameObject.SetActive(true);
+        MyNetworkManager.IsConnected = true;
     }
 
     public void GotDevID()
